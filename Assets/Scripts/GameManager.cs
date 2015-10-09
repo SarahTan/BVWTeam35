@@ -44,7 +44,9 @@ public class GameManager : MonoBehaviour {
 		float dist = Player.cupHeight/player.maxLevel;	// raise by this height
 		float speed = dist / 0.5f;
 		while (player.cursor.transform.position.y < Player.fullPos) {
-			player.cursor.transform.position.y += speed*Time.deltaTime;
+			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
+			                                               player.cursor.transform.position.y + speed*Time.deltaTime,
+			                                               player.cursor.transform.position.z);
 			yield return new WaitForEndOfFrame();
 		}
 
