@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
+	public static bool gameStarted = false;
+
 	public Timer timer;
 	public SoundManager soundManager;
 	public Animator[] anim = new Animator[2];
@@ -23,6 +25,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void StartGame () {
+		gameStarted = true;
 		timer.StartTimer ();
 		// start fruit choosing script
 	}
@@ -32,6 +35,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void TimesUp () {
+		gameStarted = false;
 		soundManager.PlayEndGame ();
 
 		if (playerScores [0] > playerScores [1]) {
