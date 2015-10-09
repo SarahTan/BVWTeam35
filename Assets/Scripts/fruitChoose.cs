@@ -4,16 +4,17 @@ using System.Collections;
 public class FruitChoose : MonoBehaviour {
 
 	public GameObject[] platform;   
-	public GameObject player0;			//start point for player1
-	public GameObject player1;			//start point for player2
-
-	int count = 0; 						//time count, determine time gap between every move
+	GameObject player0;			//store present choice for player0
+	GameObject player1;			//store present choice for player1
+	GameObject player0Prv;              //store last choice for player0
+	GameObject player1Prv;				//store last choice for player1
+	
 	int first, second;					//first is the next step for player1,second is the next step for player2
-
+	int gameStart = 0;           
+	int firstChoice = 0;
 
 	// Use this for initialization
 	void Start () {
-
 	}
 	
 	// Update is called once per frame
@@ -31,6 +32,8 @@ public class FruitChoose : MonoBehaviour {
 	 */
 
 	// TODO: Fix this to reflect the above
+
+	/*
 	public int AssignFruit (int player) {
 		first = Random.Range(0, 15);     	//generate random number
 		second = Random.Range(0, 15);		
@@ -53,6 +56,91 @@ public class FruitChoose : MonoBehaviour {
 		}
 
 		return 0;
+	}
+	*/
+
+
+	public int AssignFruit(int player){
+
+		if (gameStart < 2) {                                                    //assign random fruit two times
+			gameStart ++;
+			if(gameStart ==1){                                                  //initial
+				first = Random.Range (0, 15);     							    //generate random number
+				second = Random.Range (0, 15);		
+				while (second == first) {
+					second = Random.Range (0, 15);								//in case two numbers are same
+				}
+			}
+			if (player == 0) {
+				player0 = platform [first];
+				player0Prv = player0;
+				return first;
+			} else {
+				player1 = platform [second];
+				player1Prv = player1;
+				return second;
+			}
+		} else {
+			if (firstChoice < 2) {                         						//assign random fruits after initial part
+				firstChoice++;
+
+				if(firstChoice ==1){                       
+					while(true){
+						first = Random.Range(0, 15);     						//generate random number
+						second = Random.Range(0, 15);		
+						while(second == first ) {
+							second = Random.Range(0, 15);						//in case two numbers are same
+						}
+						if(Intersect(player0,platform[first],player1,platform[second])){    //determine if first and second are right choice
+
+							/*if((player0.transform.position == platform[second].transform.position)||
+					 	  	(platform[first].transform.position == player1.transform.position)) {  //if two route only intersect at the begin point or end point, continue
+								//continue;
+							} else {*/
+
+
+							player0Prv = player0;
+							player1Prv = player1;
+							player0 = platform[first];                                          //set next available route
+							player1 = platform[second];
+
+								//Debug.LogWarning("player0 :" + player0.transform.position);
+								//Debug.LogWarning("player1 :" + player1.transform.position);
+							break;
+							//}
+						}
+					}
+				}
+				if(player == 0 )
+					return first;
+				else 
+					return second;
+
+
+			} else {                                                                            //assign fruit function
+				if (player == 0) {																//player0
+					while (true) {
+						first = Random.Range (0, 15);
+						if (Intersect (player0, platform [first], player1Prv, player1)) {    
+							player0Prv = player0;
+							player0 = platform [first];
+							break;
+						}
+					}
+					return first;
+				} else {																		//player1
+					while (true) {
+						second = Random.Range (0, 15);
+						if (Intersect (player0Prv, player0, player1, platform [second])) {
+							player1Prv = player1;
+							player1 = platform [second];
+							break;
+						}
+					}
+					return second;
+				}
+			}
+		}
 	}
 
 	//cross product
