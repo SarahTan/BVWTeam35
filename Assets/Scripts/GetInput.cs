@@ -88,7 +88,7 @@ public class GetInput : MonoBehaviour {
 	void SendInput () {		
 		if (selected != previous) {
 			previous = selected;
-			gameManager.FruitObtained(selected);
+			gameManager.ReceiveInput(selected);
 		}
 	}
 }
