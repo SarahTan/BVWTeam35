@@ -11,11 +11,13 @@ public class SoundManager : MonoBehaviour {
 	public AudioClip blendFruit;
 	public AudioSource collectFruit;
 
+
+	public enum SPEECH {RIGHT_FRUIT = 0, CUP_FILLED = 1, WIN = 2, LOSE = 3};
 	public AudioClip[] catSpeech = new AudioClip[4];
 	public AudioClip[] dogSpeech = new AudioClip[4];
 	public AudioSource animalSpeech;
 
-	float fadeSpeed = 0.1f;
+	float fadeSpeed = 0.2f;
 
 	// Use this for initialization
 	void Start () {
@@ -42,11 +44,11 @@ public class SoundManager : MonoBehaviour {
 		collectFruit.Play ();
 	}
 
-	public void PlayAnimalSpeak (int animal, int speech) {
+	public void PlayAnimalSpeak (int animal, SPEECH speech) {
 		if (animal == 0) {
-			animalSpeech.clip = catSpeech[speech];
+			animalSpeech.clip = catSpeech[(int)speech];
 		} else if (animal == 1) {
-			animalSpeech.clip = dogSpeech[speech];
+			animalSpeech.clip = dogSpeech[(int)speech];
 		}
 		animalSpeech.Play ();
 	}

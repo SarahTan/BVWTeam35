@@ -4,9 +4,11 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour {
 
-	public static bool start = false;   //start
-	public float gameTime = 60f;		//how long our game should be
+	public GameManager gameManager;
 	public Text timerText;              //text object
+
+	int timeLeft = 80;	// in seconds
+
 	// Use this for initialization
 	void Start () {
 	
@@ -14,12 +16,19 @@ public class Timer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (start == false) {
-			gameTime -= Time.deltaTime;
-			timerText.text = "Time Left : " + gameTime;
-			if (gameTime == 0){
-				//call GameManager
-			}
+
+	}
+
+	public void StartTimer () {
+		StartCoroutine ("Countdown");
+	}
+
+	IEnumerator Countdown () {
+		while (timeLeft > 0) {
+			timeLeft--;
+			timerText.text = "Time Left: " + timeLeft/60 + ":" + (timeLeft%60).ToString("00");
+			yield return new WaitForSeconds(1f);
 		}
+		gameManager.TimesUp();
 	}
 }
