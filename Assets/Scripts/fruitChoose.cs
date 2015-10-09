@@ -3,12 +3,14 @@ using System.Collections;
 
 public class fruitChoose : MonoBehaviour {
 
-	public GameObject[] platform;
-	public GameObject Player0;
-	public GameObject Player1;
+	public GameObject[] platform;   
+	public GameObject Player0;			//start point for player1
+	public GameObject Player1;			//start point for player2
 
-	int count = 0; //time gap between every move
-	int first, second;
+	int count = 0; 						//time count, determine time gap between every move
+	int first, second;					//first is the next step for player1,second is the next step for player2
+
+
 	// Use this for initialization
 	void Start () {
 
@@ -17,25 +19,25 @@ public class fruitChoose : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (Timer.start == true) {
+		if (Timer.start == true) {                      //game start
 
-			if(count == 120){
-				Debug.Log("enter");
-				while(true){
-				    first = Random.Range(0, 15);
-					second = Random.Range(0, 15);
+			if(count == 120){		                    //call this function every 2seconds
+
+				while(true){			                //find next available route
+				    first = Random.Range(0, 15);     	//generate random number
+					second = Random.Range(0, 15);		
 					while(second == first ){
-						second = Random.Range(0, 15);
+						second = Random.Range(0, 15);	//in case two numbers are same
 					}
-					if(intersect(Player0,platform[first],Player1,platform[second])){
-						if((Player0.transform.position == platform[second].transform.position)||(platform[first].transform.position== Player1.transform.position))
+					if(intersect(Player0,platform[first],Player1,platform[second])){    //determine if first and second are right choice
+						if((Player0.transform.position == platform[second].transform.position)||(platform[first].transform.position== Player1.transform.position))  //if two route only intersect at the begin point or end point, continue
 							continue;
 						else{
-							Player0 = platform[first];
+							Player0 = platform[first];                                       //set next available route
 							Player1 = platform[second];
 							Debug.LogWarning("player0 :" + Player0.transform.position);
 							Debug.LogWarning("player1 :" + Player1.transform.position);
-							count = 0;
+							count = 0;                                                       //reset count
 							break;
 						}
 					}

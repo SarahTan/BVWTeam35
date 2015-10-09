@@ -43,9 +43,6 @@ public class GetInput : MonoBehaviour {
 		} else if (Input.GetKeyDown ("space")) {
 			Debug.Log("Space");
 
-		} else if (Input.GetKeyDown ("mouse 0")) {
-			Debug.Log("Left click");
-
 		} else if (Input.GetKeyDown ("mouse 1")) {
 			Debug.Log("Right click");
 
