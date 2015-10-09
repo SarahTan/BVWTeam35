@@ -5,10 +5,14 @@ public class GameManager : MonoBehaviour {
 
 	public static bool gameStarted = false;
 
+	public FruitChoose fruitChoose;
 	public Timer timer;
 	public SoundManager soundManager;
 	public Animator[] anim = new Animator[2];
 
+	public Player cat;
+	public Player dog;
+	
 	int[] playerScores = new int[2];
 	int winner = -1;
 	int loser = -1;
@@ -27,11 +31,21 @@ public class GameManager : MonoBehaviour {
 	void StartGame () {
 		gameStarted = true;
 		timer.StartTimer ();
-		// start fruit choosing script
+		cat.currentFruit = fruitChoose.AssignFruit (0);
+		dog.currentFruit = fruitChoose.AssignFruit (1);
 	}
 
-	public void AddScore(int player) {
-		playerScores [player]++;
+
+	public void FruitObtained (int fruit) {
+		if (fruit == cat.currentFruit) {
+			cat.score++;
+			cat.prevFruit = cat.currentFruit;
+			cat.currentFruit = fruitChoose.AssignFruit(0);
+		} else if (fruit == dog.currentFruit) {
+			dog.score++;
+			dog.prevFruit = dog.currentFruit;
+			dog.currentFruit = fruitChoose.AssignFruit(1);
+		}
 	}
 
 	public void TimesUp () {

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GetInput : MonoBehaviour {
 
+	public GameManager gameManager;
+
 	int selected = -1;
 	int previous = -1;
 
@@ -86,7 +88,7 @@ public class GetInput : MonoBehaviour {
 	void SendInput () {		
 		if (selected != previous) {
 			previous = selected;
-			// call some function
+			gameManager.FruitObtained(selected);
 		}
 	}
 }
