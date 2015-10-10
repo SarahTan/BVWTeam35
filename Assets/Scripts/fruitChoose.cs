@@ -56,13 +56,13 @@ public class FruitChoose : MonoBehaviour
         } else {
             if (gameStart == 2) {
 				gameStart++;
-
+                Debug.Log("gamestart = 2");
                 while (true) {                
 					for(int i = 0; i < 2; i++) {
 						temp = Random.Range(0, maxButtons);  
 						Debug.Log("temp: " + temp + ", assignedNum" + i + assignedNum[i]);
 
-						while (assignedNum[i] == temp || assignedNum[0] == assignedNum[1]) {
+						while (assignedNum[i] == temp || assignedNum[(i+1)%2] == temp) {
 							Debug.Log("assignnum" + i + assignedNum[i] + ", temp: " + temp);
 							Debug.Log("assignnum0" + assignedNum[0] + " assignnum1" + assignedNum[1]);
 							temp = Random.Range(0, maxButtons);
@@ -89,11 +89,12 @@ public class FruitChoose : MonoBehaviour
 			} else {
                 while (true) {
                     temp = Random.Range(0, maxButtons);
-                    while (assignedNum[player] == temp) {
+                    while (assignedNum[player] == temp || assignedNum[(player + 1) % 2] == temp){
                         temp = Random.Range(0, maxButtons);
                     }
+                    assignedNum[player] = temp;
 
-					if (Intersect(currentChoice[player], buttons[assignedNum[player]],
+                    if (Intersect(currentChoice[player], buttons[assignedNum[player]],
 					              currentChoice[(player+1)%2], prevChoice[(player+1)%2])) {
 						prevChoice[player] = currentChoice[player];
 						currentChoice[player] = buttons[assignedNum[player]];

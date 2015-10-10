@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator FruitObtained (Player player, int num) {
-		Debug.Log ("Player" + player + " collected");
+
+        Debug.Log ("Player" + player + " collected");
 		soundManager.PlayCollectFruit (true);
 		soundManager.PlayAnimalSpeak (num, SoundManager.SPEECH.RIGHT_FRUIT);
 		// play happy anim
@@ -44,11 +45,14 @@ public class GameManager : MonoBehaviour {
 		player.cupLevel++;
 		float dist = Player.cupHeight/player.maxLevel;	// raise by this height
 		float speed = dist / 0.5f;
-		while (player.cursor.transform.position.y < Player.fullPos) {
+        /*
+        while (player.cursor.transform.position.y < Player.fullPos) {
 			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
 			                                               player.cursor.transform.position.y + speed*Time.deltaTime);
-			yield return new WaitForEndOfFrame();
-		}
+
+            Debug.Log("pos: " + player.cursor.transform.position.y);
+            yield return new WaitForEndOfFrame();
+		}*/
 
 		if (player.cupLevel == player.maxLevel) {	
 			yield return new WaitForSeconds (3f);	// change this to right fruit sound duration
