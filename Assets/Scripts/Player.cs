@@ -5,6 +5,7 @@ public class Player : MonoBehaviour {
 
 	public static float cupHeight = 11f;
 	public static float fullPos = 8f;
+	public static float emptyPos = -3f;
 
 	public int score = 0;
 	public int currentFruit = -1;

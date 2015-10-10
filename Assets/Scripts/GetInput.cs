@@ -15,7 +15,7 @@ public class GetInput : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (GameManager.gameStarted) {
+		if (GameManager.gameInProgress) {
 			if (Input.GetKeyDown ("w")) {
 				Debug.Log (Input.inputString);
 				selected = 0;

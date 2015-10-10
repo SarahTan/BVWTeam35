@@ -45,9 +45,9 @@ public class FruitChoose : MonoBehaviour
     public int AssignFruit(int player) {
         if (gameStart < 2) {                              //assign random fruit two times
 
-            assignedNum[player] = Random.Range(0, 15);
+            assignedNum[player] = Random.Range(0, 11);
             while (assignedNum[0] == assignedNum[1]) {
-                assignedNum[player] = Random.Range(0, 15);  //in case two numbers are same
+                assignedNum[player] = Random.Range(0, 11);  //in case two numbers are same
             }
             currentChoice[player] = buttons[assignedNum[player]];
             prevChoice[player] = buttons[assignedNum[player]];
@@ -59,9 +59,9 @@ public class FruitChoose : MonoBehaviour
 
                 while (true) {                
 					for(int i = 0; i < 2; i++) {
-						temp = Random.Range(0, 15);  
+						temp = Random.Range(0, 11);  
 						while (assignedNum[i] == temp || assignedNum[0] == assignedNum[1]) {
-							temp = Random.Range(0, 15);
+							temp = Random.Range(0, 11);
 						}
 						assignedNum[i] = temp;
 					}

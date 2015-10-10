@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour {
 
-	public static bool gameStarted = false;
+	public static bool gameInProgress = false;
 
 	public FruitChoose fruitChoose;
 	public Timer timer;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void StartGame () {
-		gameStarted = true;
+		gameInProgress = true;
 		timer.StartTimer ();
 		cat.currentFruit = fruitChoose.AssignFruit (0);
 		dog.currentFruit = fruitChoose.AssignFruit (1);
@@ -43,8 +43,7 @@ public class GameManager : MonoBehaviour {
 		float speed = dist / 0.5f;
 		while (player.cursor.transform.position.y < Player.fullPos) {
 			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
-			                                               player.cursor.transform.position.y + speed*Time.deltaTime,
-			                                               player.cursor.transform.position.z);
+			                                               player.cursor.transform.position.y + speed*Time.deltaTime);
 			yield return new WaitForEndOfFrame();
 		}
 
@@ -55,7 +54,13 @@ public class GameManager : MonoBehaviour {
 			soundManager.PlayAnimalSpeak(num, SoundManager.SPEECH.CUP_FILLED);
 
 			// cup empty anim
-			// decrease arrow height
+
+			while (player.cursor.transform.position.y > Player.emptyPos) {
+				player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
+				                                               player.cursor.transform.position.y - speed*Time.deltaTime);
+				yield return new WaitForEndOfFrame();
+			}
+
 			// cupcount increase anim
 
 			player.cupLevel = 0;
@@ -63,22 +68,22 @@ public class GameManager : MonoBehaviour {
 
 			yield return new WaitForSeconds(3f);	// change this to animal speak duration
 		}
-
 		player.currentFruit = fruitChoose.AssignFruit (num);
-
-		yield return null;
 	}
 
 	public void ReceiveInput (int fruit) {
-		if (fruit == cat.currentFruit) {
-			StartCoroutine (FruitObtained (cat, 0));
-		} else if (fruit == dog.currentFruit) {
-			StartCoroutine (FruitObtained (dog, 1));
+		if (gameInProgress) {
+			if (fruit == cat.currentFruit) {
+				StartCoroutine (FruitObtained (cat, 0));
+			} else if (fruit == dog.currentFruit) {
+				StartCoroutine (FruitObtained (dog, 1));
+			}
 		}
 	}
 
 	public void TimesUp () {
-		gameStarted = false;
+		gameInProgress = false;
+		StopAllCoroutines ();
 		soundManager.PlayEndGame ();
 
 		if (cat.score > dog.score) {
