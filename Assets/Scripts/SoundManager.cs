@@ -16,6 +16,7 @@ public class SoundManager : MonoBehaviour {
 	public AudioClip[] catSpeech = new AudioClip[4];
 	public AudioClip[] dogSpeech = new AudioClip[4];
 	public AudioSource animalSpeech;
+	//TODO: 2 SEPARATE SOURCES FOR EACH ANIMAL
 
 	float fadeSpeed = 0.2f;
 

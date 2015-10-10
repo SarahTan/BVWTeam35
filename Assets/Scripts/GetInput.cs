@@ -63,26 +63,10 @@ public class GetInput : MonoBehaviour {
 			} else if (Input.GetKeyDown ("mouse 1")) {
 				Debug.Log ("Right click");
 				selected = 11;
-
-
-				// change these once we get the makey makey to make it less sensitive
-			} else if (Input.GetAxis ("Mouse X") > 0.5) {
-				Debug.Log ("Mouse moving right");
-				selected = 12;
-
-			} else if (Input.GetAxis ("Mouse X") < -0.5) {
-				Debug.Log ("Mouse moving left");
-				selected = 13;
-
-			} else if (Input.GetAxis ("Mouse Y") > 0.5) {
-				Debug.Log ("Mouse moving up");
-				selected = 14;
-			
-			} else if (Input.GetAxis ("Mouse Y") < -0.5) {
-				Debug.Log ("Mouse moving down");
-				selected = 15;
-			}
+			} 
 		}
+
+		SendInput ();
 	}
 
 	void SendInput () {		

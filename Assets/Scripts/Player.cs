@@ -7,6 +7,7 @@ public class Player : MonoBehaviour {
 	public static float fullPos = 8f;
 	public static float emptyPos = -3f;
 
+	public float nextPos;
 	public int score = 0;
 	public int currentFruit = -1;
 	public int cupLevel = 0;
@@ -21,5 +22,9 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void SetScore () {
+
 	}
 }

@@ -31,9 +31,12 @@ public class GameManager : MonoBehaviour {
 		timer.StartTimer ();
 		cat.currentFruit = fruitChoose.AssignFruit (0);
 		dog.currentFruit = fruitChoose.AssignFruit (1);
+
+		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
 
 	IEnumerator FruitObtained (Player player, int num) {
+		Debug.Log ("Player" + player + " collected");
 		soundManager.PlayCollectFruit (true);
 		soundManager.PlayAnimalSpeak (num, SoundManager.SPEECH.RIGHT_FRUIT);
 		// play happy anim
@@ -69,14 +72,19 @@ public class GameManager : MonoBehaviour {
 			yield return new WaitForSeconds(3f);	// change this to animal speak duration
 		}
 		player.currentFruit = fruitChoose.AssignFruit (num);
+		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
 
 	public void ReceiveInput (int fruit) {
-		if (gameInProgress) {
+		if (gameInProgress) {			
+			Debug.Log("fruit: " + fruit + ", cat.currentFruit: " + cat.currentFruit);
 			if (fruit == cat.currentFruit) {
 				StartCoroutine (FruitObtained (cat, 0));
 			} else if (fruit == dog.currentFruit) {
 				StartCoroutine (FruitObtained (dog, 1));
+			} else {
+				soundManager.PlayCollectFruit(false);
+				// punish players
 			}
 		}
 	}

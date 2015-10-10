@@ -54,13 +54,17 @@ public class FruitChoose : MonoBehaviour
             gameStart++;
 
         } else {
-            if (gameStart == 3) {
+            if (gameStart == 2) {
 				gameStart++;
 
                 while (true) {                
 					for(int i = 0; i < 2; i++) {
 						temp = Random.Range(0, maxButtons);  
+						Debug.Log("temp: " + temp + ", assignedNum" + i + assignedNum[i]);
+
 						while (assignedNum[i] == temp || assignedNum[0] == assignedNum[1]) {
+							Debug.Log("assignnum" + i + assignedNum[i] + ", temp: " + temp);
+							Debug.Log("assignnum0" + assignedNum[0] + " assignnum1" + assignedNum[1]);
 							temp = Random.Range(0, maxButtons);
 						}
 						assignedNum[i] = temp;
@@ -77,6 +81,7 @@ public class FruitChoose : MonoBehaviour
                     }
                 }
             }
+
 
 			// Called once per player
             if (count[player] == 0) {
