@@ -12,7 +12,7 @@ public class FruitChoose : MonoBehaviour
     int[] assignedNum = new int[2];     // this used to be called first and second
     int[] count = new int[2];
     int gameStart = 0;
-    int temp;
+    int temp,maxButtons = 11;
 
     // Use this for initialization
     void Start() {
@@ -45,9 +45,9 @@ public class FruitChoose : MonoBehaviour
     public int AssignFruit(int player) {
         if (gameStart < 2) {                              //assign random fruit two times
 
-            assignedNum[player] = Random.Range(0, 11);
+            assignedNum[player] = Random.Range(0, maxButtons);
             while (assignedNum[0] == assignedNum[1]) {
-                assignedNum[player] = Random.Range(0, 11);  //in case two numbers are same
+                assignedNum[player] = Random.Range(0, maxButtons);  //in case two numbers are same
             }
             currentChoice[player] = buttons[assignedNum[player]];
             prevChoice[player] = buttons[assignedNum[player]];
@@ -59,9 +59,9 @@ public class FruitChoose : MonoBehaviour
 
                 while (true) {                
 					for(int i = 0; i < 2; i++) {
-						temp = Random.Range(0, 11);  
+						temp = Random.Range(0, maxButtons);  
 						while (assignedNum[i] == temp || assignedNum[0] == assignedNum[1]) {
-							temp = Random.Range(0, 11);
+							temp = Random.Range(0, maxButtons);
 						}
 						assignedNum[i] = temp;
 					}
@@ -83,9 +83,9 @@ public class FruitChoose : MonoBehaviour
 				count[player]++;
 			} else {
                 while (true) {
-                    temp = Random.Range(0, 15);
+                    temp = Random.Range(0, maxButtons);
                     while (assignedNum[player] == temp) {
-                        temp = Random.Range(0, 15);
+                        temp = Random.Range(0, maxButtons);
                     }
 
 					if (Intersect(currentChoice[player], buttons[assignedNum[player]],
