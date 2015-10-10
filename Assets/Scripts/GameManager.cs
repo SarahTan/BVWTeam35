@@ -12,14 +12,12 @@ public class GameManager : MonoBehaviour {
 
 	public Player cat;
 	public Player dog;
-	
-	int[] playerScores = new int[2];
+
 	int winner = -1;
 	int loser = -1;
 
 	// Use this for initialization
 	void Start () {
-		playerScores [0] = playerScores [1] = 0;
 		StartGame ();
 	}
 	
@@ -35,16 +33,47 @@ public class GameManager : MonoBehaviour {
 		dog.currentFruit = fruitChoose.AssignFruit (1);
 	}
 
+	IEnumerator FruitObtained (Player player, int num) {
+		soundManager.PlayCollectFruit (true);
+		soundManager.PlayAnimalSpeak (num, SoundManager.SPEECH.RIGHT_FRUIT);
+		// play happy anim
 
-	public void FruitObtained (int fruit) {
+		player.cupLevel++;
+		float dist = Player.cupHeight/player.maxLevel;	// raise by this height
+		float speed = dist / 0.5f;
+		while (player.cursor.transform.position.y < Player.fullPos) {
+			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
+			                                               player.cursor.transform.position.y + speed*Time.deltaTime,
+			                                               player.cursor.transform.position.z);
+			yield return new WaitForEndOfFrame();
+		}
+
+		if (player.cupLevel == player.maxLevel) {	
+			yield return new WaitForSeconds (3f);	// change this to right fruit sound duration
+
+			soundManager.PlayBlender();
+			soundManager.PlayAnimalSpeak(num, SoundManager.SPEECH.CUP_FILLED);
+
+			// cup empty anim
+			// decrease arrow height
+			// cupcount increase anim
+
+			player.cupLevel = 0;
+			player.score++;
+
+			yield return new WaitForSeconds(3f);	// change this to animal speak duration
+		}
+
+		player.currentFruit = fruitChoose.AssignFruit (num);
+
+		yield return null;
+	}
+
+	public void ReceiveInput (int fruit) {
 		if (fruit == cat.currentFruit) {
-			cat.score++;
-			cat.prevFruit = cat.currentFruit;
-			cat.currentFruit = fruitChoose.AssignFruit(0);
+			StartCoroutine (FruitObtained (cat, 0));
 		} else if (fruit == dog.currentFruit) {
-			dog.score++;
-			dog.prevFruit = dog.currentFruit;
-			dog.currentFruit = fruitChoose.AssignFruit(1);
+			StartCoroutine (FruitObtained (dog, 1));
 		}
 	}
 
@@ -52,7 +81,7 @@ public class GameManager : MonoBehaviour {
 		gameStarted = false;
 		soundManager.PlayEndGame ();
 
-		if (playerScores [0] > playerScores [1]) {
+		if (cat.score > dog.score) {
 			winner = 0;
 			loser = 1;
 		} else {

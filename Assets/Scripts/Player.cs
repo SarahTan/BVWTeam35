@@ -3,10 +3,14 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+	public static float cupHeight = 11f;
+	public static float fullPos = 8f;
+
 	public int score = 0;
 	public int currentFruit = -1;
-	public int prevFruit = -1;
 	public int cupLevel = 0;
+	public int maxLevel = 3;
+	public GameObject cursor;
 
 	// Use this for initialization
 	void Start () {
