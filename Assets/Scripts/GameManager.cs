@@ -12,14 +12,12 @@ public class GameManager : MonoBehaviour {
 
 	public Player cat;
 	public Player dog;
-	
-	int[] playerScores = new int[2];
+
 	int winner = -1;
 	int loser = -1;
 
 	// Use this for initialization
 	void Start () {
-		playerScores [0] = playerScores [1] = 0;
 		StartGame ();
 	}
 	
@@ -83,7 +81,7 @@ public class GameManager : MonoBehaviour {
 		gameStarted = false;
 		soundManager.PlayEndGame ();
 
-		if (playerScores [0] > playerScores [1]) {
+		if (cat.score > dog.score) {
 			winner = 0;
 			loser = 1;
 		} else {

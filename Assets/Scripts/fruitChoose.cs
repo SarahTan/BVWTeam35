@@ -3,18 +3,19 @@ using System.Collections;
 
 public class FruitChoose : MonoBehaviour {
 
-	public GameObject[] platform;   
-	GameObject player0;			//store present choice for player0
-	GameObject player1;			//store present choice for player1
-	GameObject player0Prv;              //store last choice for player0
-	GameObject player1Prv;				//store last choice for player1
-	
-	int first, second;					//first is the next step for player1,second is the next step for player2
+	public GameObject[] buttons;   
+
+	// we use arrays so we don't have to write separate code for each player -- we just use their index
+	GameObject[] currentChoice = new GameObject[2];
+	GameObject[] prevChoice = new GameObject[2];	
+	int[] assignedNum = new int[2];		// this used to be called first and second
+
 	int gameStart = 0;           
 	int firstChoice = 0;
 
 	// Use this for initialization
 	void Start () {
+		assignedNum [0] = assignedNum [1] = -1;		// init the array so it isn't = 0
 	}
 	
 	// Update is called once per frame
@@ -33,76 +34,46 @@ public class FruitChoose : MonoBehaviour {
 
 	// TODO: Fix this to reflect the above
 
-	/*
-	public int AssignFruit (int player) {
-		first = Random.Range(0, 15);     	//generate random number
-		second = Random.Range(0, 15);		
-		while(second == first ) {
-			second = Random.Range(0, 15);	//in case two numbers are same
-		}
-
-		if(Intersect(player0,platform[first],player1,platform[second])){    //determine if first and second are right choice
-			if((player0.transform.position == platform[second].transform.position)||
-			   (platform[first].transform.position == player1.transform.position)) {  //if two route only intersect at the begin point or end point, continue
-				//continue;
-			} else {
-				player0 = platform[first];                                       //set next available route
-				player1 = platform[second];
-				Debug.LogWarning("player0 :" + player0.transform.position);
-				Debug.LogWarning("player1 :" + player1.transform.position);
-				count = 0;                                                       //reset count
-				//break;
-			}
-		}
-
-		return 0;
-	}
-	*/
-
-
 	public int AssignFruit(int player){
 
-		if (gameStart < 2) {                                                    //assign random fruit two times
+		// The if part is done, no need to touch it
+		if (gameStart < 2) {	                           //assign random fruit two times
 			gameStart ++;
-			if(gameStart ==1){                                                  //initial
-				first = Random.Range (0, 15);     							    //generate random number
-				second = Random.Range (0, 15);		
-				while (second == first) {
-					second = Random.Range (0, 15);								//in case two numbers are same
-				}
+
+			assignedNum[player] = Random.Range (0, 15);
+			while (assignedNum[0] == assignedNum[1]) {
+				assignedNum[player] = Random.Range (0, 15);	//in case two numbers are same
 			}
-			if (player == 0) {
-				player0 = platform [first];
-				player0Prv = player0;
-				return first;
-			} else {
-				player1 = platform [second];
-				player1Prv = player1;
-				return second;
-			}
+
+			currentChoice[player] = buttons[assignedNum[player]];
+			prevChoice[player] = buttons[assignedNum[player]];
+
+
+		// TODO: You see after I start using arrays, there's a lot of redundancy and repeated code
+		// Please fix this, thanks (:
 		} else {
 			if (firstChoice < 2) {                         						//assign random fruits after initial part
 				firstChoice++;
 
 				if(firstChoice ==1){                       
 					while(true){
-						first = Random.Range(0, 15);     						//generate random number
-						second = Random.Range(0, 15);		
-						while(second == first ) {
-							second = Random.Range(0, 15);						//in case two numbers are same
+						assignedNum[0] = Random.Range(0, 15);     						//generate random number
+						assignedNum[1] = Random.Range(0, 15);		
+						while(assignedNum[0] == assignedNum[1]) {
+							assignedNum[1] = Random.Range(0, 15);						//in case two numbers are same
 						}
-						if(Intersect(player0,platform[first],player1,platform[second])){    //determine if first and second are right choice
+						if(Intersect(currentChoice[0], buttons[assignedNum[0]],
+						             currentChoice[1], buttons[assignedNum[1]])){    //determine if first and second are right choice
 
 							/*if((player0.transform.position == platform[second].transform.position)||
 					 	  	(platform[first].transform.position == player1.transform.position)) {  //if two route only intersect at the begin point or end point, continue
 								//continue;
 							} else {*/
 
-
-							player0Prv = player0;
-							player1Prv = player1;
-							player0 = platform[first];                                          //set next available route
-							player1 = platform[second];
+							prevChoice[0] = currentChoice[0];
+							prevChoice[1] = currentChoice[1];
+							currentChoice[0] = buttons[assignedNum[0]];                                          //set next available route
+							currentChoice[0] = buttons[assignedNum[1]];
 
 								//Debug.LogWarning("player0 :" + player0.transform.position);
 								//Debug.LogWarning("player1 :" + player1.transform.position);
@@ -111,36 +82,31 @@ public class FruitChoose : MonoBehaviour {
 						}
 					}
 				}
-				if(player == 0 )
-					return first;
-				else 
-					return second;
-
-
-			} else {                                                                            //assign fruit function
-				if (player == 0) {																//player0
+			} else {                                                     //assign fruit function
+				if (player == 0) {										 //player0
 					while (true) {
-						first = Random.Range (0, 15);
-						if (Intersect (player0, platform [first], player1Prv, player1)) {    
-							player0Prv = player0;
-							player0 = platform [first];
+						assignedNum[0] = Random.Range (0, 15);
+						if (Intersect (currentChoice[0], buttons [assignedNum[0]],
+						               currentChoice[0], prevChoice[1])) {    
+							prevChoice[0] = currentChoice[0];
+							currentChoice[0] = buttons [assignedNum[0]];
 							break;
 						}
 					}
-					return first;
-				} else {																		//player1
+				} else {												//player1
 					while (true) {
-						second = Random.Range (0, 15);
-						if (Intersect (player0Prv, player0, player1, platform [second])) {
-							player1Prv = player1;
-							player1 = platform [second];
+						assignedNum[1] = Random.Range (0, 15);
+						if (Intersect (prevChoice[0], currentChoice[0],
+						               currentChoice[1], buttons [assignedNum[1]])) {
+							prevChoice[1] = currentChoice[1];
+							currentChoice[1] = buttons [assignedNum[1]];
 							break;
 						}
 					}
-					return second;
 				}
 			}
 		}
+		return assignedNum[player];
 	}
 
 	//cross product
