@@ -53,79 +53,71 @@ public class FruitChoose : MonoBehaviour
             prevChoice[player] = buttons[assignedNum[player]];
             gameStart++;
 
-        } else {
-            if (gameStart == 2) {
+		} else {
+			bool intersect = false;
+
+			if (gameStart == 2) {
 				gameStart++;
-
-                while (true) {                
+                while (!intersect) {
 					for(int i = 0; i < 2; i++) {
-						temp = Random.Range(0, maxButtons);  
-						Debug.Log("temp: " + temp + ", assignedNum" + i + assignedNum[i]);
+						temp = Random.Range(0, maxButtons);
 
-						while (assignedNum[i] == temp || assignedNum[0] == assignedNum[1]) {
-							Debug.Log("assignnum" + i + assignedNum[i] + ", temp: " + temp);
-							Debug.Log("assignnum0" + assignedNum[0] + " assignnum1" + assignedNum[1]);
+						while (assignedNum[i] == temp || assignedNum[(i+1)%2] == temp) {
 							temp = Random.Range(0, maxButtons);
 						}
 						assignedNum[i] = temp;
 					}
 
-					// Check if the 2 numbers intersect
                     if (Intersect(currentChoice[0], buttons[assignedNum[0]],
                                   currentChoice[1], buttons[assignedNum[1]])) {
+						intersect = true;
 						for(int i = 0; i < 2; i++) {
 							prevChoice[i] = currentChoice[i];
 							currentChoice[i] = buttons[assignedNum[i]];
 						}
-                        break;
                     }
                 }
-            }
-
-
+            } // do not put an else here.
 			// Called once per player
-            if (count[player] == 0) {
+			if (count[player] == 0) {
 				count[player]++;
 			} else {
-                while (true) {
+				while (!intersect) {
                     temp = Random.Range(0, maxButtons);
-                    while (assignedNum[player] == temp) {
-                        temp = Random.Range(0, maxButtons);
+
+					while (assignedNum[player] == temp || assignedNum[(player+1)%2] == temp) {
+						temp = Random.Range(0, maxButtons);
                     }
+					assignedNum[player] = temp;
 
 					if (Intersect(currentChoice[player], buttons[assignedNum[player]],
 					              currentChoice[(player+1)%2], prevChoice[(player+1)%2])) {
+						intersect = true;
 						prevChoice[player] = currentChoice[player];
 						currentChoice[player] = buttons[assignedNum[player]];
-						break;
 					}
                 }
             }
-        }
-		
+        }			
+		Debug.Log("assignednum" + player + ": " + assignedNum[player]);
 		return assignedNum[player];
 	}
 	
 	//cross product
-    double Mult(GameObject a, GameObject b, GameObject c)
-    {
+    double Mult(GameObject a, GameObject b, GameObject c) {
         return ((a.transform.position.x - c.transform.position.x) * (b.transform.position.y - c.transform.position.y)) -
             ((b.transform.position.x - c.transform.position.x) * (a.transform.position.y - c.transform.position.y));
     }
 
     //return true if intersect
-    bool Intersect(GameObject PointA0, GameObject PointA1, GameObject PointB0, GameObject PointB1)
-    {
+    bool Intersect(GameObject PointA0, GameObject PointA1, GameObject PointB0, GameObject PointB1) {
         if (Mathf.Max(PointA0.transform.position.x, PointA1.transform.position.x) < Mathf.Min(PointB0.transform.position.x, PointB1.transform.position.x) ||
             Mathf.Max(PointA0.transform.position.y, PointA1.transform.position.y) < Mathf.Min(PointB0.transform.position.y, PointB1.transform.position.y) ||
             Mathf.Max(PointB0.transform.position.x, PointB1.transform.position.x) < Mathf.Min(PointA0.transform.position.x, PointA1.transform.position.x) ||
             Mathf.Max(PointB0.transform.position.y, PointB1.transform.position.y) < Mathf.Min(PointA0.transform.position.y, PointA1.transform.position.y) ||
-            Mult(PointB0, PointA1, PointA0) * Mult(PointA1, PointB1, PointA0) < 0 || Mult(PointA0, PointB1, PointB0) * Mult(PointB1, PointA1, PointB0) < 0)
-        {
+            Mult(PointB0, PointA1, PointA0) * Mult(PointA1, PointB1, PointA0) < 0 || Mult(PointA0, PointB1, PointB0) * Mult(PointB1, PointA1, PointB0) < 0) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }

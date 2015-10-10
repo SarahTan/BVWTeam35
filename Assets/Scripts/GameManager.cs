@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
 
 	int winner = -1;
 	int loser = -1;
+	int assignFruit = -1;
 
 	// Use this for initialization
 	void Start () {
@@ -23,7 +24,7 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	void StartGame () {
@@ -44,14 +45,14 @@ public class GameManager : MonoBehaviour {
 		player.cupLevel++;
 		float dist = Player.cupHeight/player.maxLevel;	// raise by this height
 		float speed = dist / 0.5f;
-		while (player.cursor.transform.position.y < Player.fullPos) {
+		while (player.cursor.transform.position.y < 0) {
 			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
 			                                               player.cursor.transform.position.y + speed*Time.deltaTime);
 			yield return new WaitForEndOfFrame();
 		}
 
 		if (player.cupLevel == player.maxLevel) {	
-			yield return new WaitForSeconds (3f);	// change this to right fruit sound duration
+			yield return new WaitForSeconds (2f);	// change this to right fruit sound duration
 
 			soundManager.PlayBlender();
 			soundManager.PlayAnimalSpeak(num, SoundManager.SPEECH.CUP_FILLED);
@@ -68,18 +69,18 @@ public class GameManager : MonoBehaviour {
 
 			player.cupLevel = 0;
 			player.score++;
-
-			yield return new WaitForSeconds(3f);	// change this to animal speak duration
 		}
+		
 		player.currentFruit = fruitChoose.AssignFruit (num);
-		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
+		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);		
 	}
 
 	public void ReceiveInput (int fruit) {
-		if (gameInProgress) {			
-			Debug.Log("fruit: " + fruit + ", cat.currentFruit: " + cat.currentFruit);
+		if (gameInProgress) {
 			if (fruit == cat.currentFruit) {
-				StartCoroutine (FruitObtained (cat, 0));
+				cat.currentFruit = fruitChoose.AssignFruit(0);
+				Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
+				//StartCoroutine (FruitObtained (cat, 0));
 			} else if (fruit == dog.currentFruit) {
 				StartCoroutine (FruitObtained (dog, 1));
 			} else {
