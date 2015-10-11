@@ -6,19 +6,15 @@ public class FruitChoose : MonoBehaviour
 
     public GameObject[] buttons;
 
-    // we use arrays so we don't have to write separate code for each player -- we just use their index
-    GameObject[] currentChoice = new GameObject[2];
-    GameObject[] prevChoice = new GameObject[2];
+    int[] prevAssignedNum = new int[2];
     int[] assignedNum = new int[2];     // this used to be called first and second
-    int[] count = new int[2];
-    int gameStart = 0;
-    int temp, maxButtons = 11;
+    int maxButtons = 12;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        assignedNum[0] = assignedNum[1] = -1;       // init the array so it isn't = 0
-        count[0] = count[1] = 0;
+        prevAssignedNum[0] = prevAssignedNum[1] = -1;
+        assignedNum[0] = assignedNum[1] = -1;
     }
 
     // Update is called once per frame
@@ -36,92 +32,14 @@ public class FruitChoose : MonoBehaviour
        *     You probably want to store the fruit which each player is currently assigned, and maybe the previous one as well so those don't get called immediately again. 
        */
 
-
-    /*
-    gameStart is to assign two fruit at random for player0 and player1
-    After gameStart, the "else" part is to calculate two number for player0 and player1
-    After next two numbers are decided, using count to know if it is the first time that player call the funtion. 
-    If it's the first time, assign the value we got in previous "else" part to player. If not, do the normal work
-    */
-
     public int AssignFruit(int player)
     {
-        if (gameStart < 2)
-        {                              //assign random fruit two times
-
-            assignedNum[player] = Random.Range(0, maxButtons);
-            while (assignedNum[0] == assignedNum[1])
-            {
-                assignedNum[player] = Random.Range(0, maxButtons);  //in case two numbers are same
-            }
-            currentChoice[player] = buttons[assignedNum[player]];
-            prevChoice[player] = buttons[assignedNum[player]];
-            gameStart++;
-
-        }
-        else
+        prevAssignedNum[player] = assignedNum[player];
+        while (assignedNum[player] == prevAssignedNum[player] ||
+               assignedNum[player] == assignedNum[(player + 1) % 2])
         {
-            bool intersect = false;
-
-            if (gameStart == 2)
-            {
-                gameStart++;
-                while (!intersect)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        temp = Random.Range(0, maxButtons);
-
-                        while (assignedNum[0] == temp || assignedNum[1] == temp)
-                        {
-                            temp = Random.Range(0, maxButtons);
-                            
-                        }
-                        Debug.Log("i:" + i + " num :" + assignedNum[i]);
-                        assignedNum[i] = temp;
-                    }
-
-                    if (Intersect(currentChoice[0], buttons[assignedNum[0]],
-                                  currentChoice[1], buttons[assignedNum[1]]))
-                    {
-                        intersect = true;
-                        for (int i = 0; i < 2; i++)
-                        {
-                            prevChoice[i] = currentChoice[i];
-                            currentChoice[i] = buttons[assignedNum[i]];
-                            Debug.Log("i:" + i + " num :" + assignedNum[i]);
-                        }
-                    }
-                }
-            } // do not put an else here.
-              // Called once per player
-            if (count[player] == 0)
-            {
-                count[player]++;
-            }
-            else
-            {
-                while (!intersect)
-                {
-                    temp = Random.Range(0, maxButtons);
-
-                    while (assignedNum[0] == temp || assignedNum[1] == temp)
-                    {
-                        temp = Random.Range(0, maxButtons);
-                    }
-                    assignedNum[player] = temp;
-
-                    if (Intersect(currentChoice[player], buttons[assignedNum[player]],
-                                  currentChoice[(player + 1) % 2], prevChoice[(player + 1) % 2]))
-                    {
-                        intersect = true;
-                        prevChoice[player] = currentChoice[player];
-                        currentChoice[player] = buttons[assignedNum[player]];
-                    }
-                }
-            }
+            assignedNum[player] = Random.Range(0, maxButtons);
         }
-        Debug.Log("assignednum" + player + ": " + assignedNum[player]);
         return assignedNum[player];
     }
 
