@@ -36,56 +36,51 @@ public class GameManager : MonoBehaviour {
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
 
-	IEnumerator FruitObtained (Player player, int num) {
+	void FruitObtained (Player player) {
 		Debug.Log ("Player" + player + " collected");
 		soundManager.PlayCollectFruit (true);
-		soundManager.PlayAnimalSpeak (num, SoundManager.SPEECH.RIGHT_FRUIT);
-		// play happy anim
+		soundManager.PlayAnimalSpeak (player.animalNum, SoundManager.SPEECH.RIGHT_FRUIT);
+		anim [player.animalNum].SetTrigger ("Happy");
 
-		player.cupLevel++;
-		float dist = Player.cupHeight/player.maxLevel;	// raise by this height
-		float speed = dist / 0.5f;
-		while (player.cursor.transform.position.y < 0) {
-			player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
-			                                               player.cursor.transform.position.y + speed*Time.deltaTime);
-			yield return new WaitForEndOfFrame();
-		}
+		player.ChangeCupLevel(true);
 
+		// switch to next cup
 		if (player.cupLevel == player.maxLevel) {	
-			yield return new WaitForSeconds (2f);	// change this to right fruit sound duration
-
-			soundManager.PlayBlender();
-			soundManager.PlayAnimalSpeak(num, SoundManager.SPEECH.CUP_FILLED);
-
-			// cup empty anim
-
-			while (player.cursor.transform.position.y > Player.emptyPos) {
-				player.cursor.transform.position = new Vector3(player.cursor.transform.position.x,
-				                                               player.cursor.transform.position.y - speed*Time.deltaTime);
-				yield return new WaitForEndOfFrame();
-			}
-
-			// cupcount increase anim
-
-			player.cupLevel = 0;
-			player.score++;
+			StartCoroutine(ChangeCups(player));
 		}
 		
-		player.currentFruit = fruitChoose.AssignFruit (num);
+		player.currentFruit = fruitChoose.AssignFruit (player.animalNum);
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);		
 	}
+
+	IEnumerator ChangeCups (Player player) {
+		yield return new WaitForSeconds (1f);	// change this to right fruit sound duration
+		
+		soundManager.PlayBlender();
+		soundManager.PlayAnimalSpeak(player.animalNum, SoundManager.SPEECH.CUP_FILLED);
+		
+		player.ChangeCupLevel (false);
+		
+		// cupcount increase anim
+		
+		player.IncreaseScore();
+	}
+
 
 	public void ReceiveInput (int fruit) {
 		if (gameInProgress) {
 			if (fruit == cat.currentFruit) {
-				cat.currentFruit = fruitChoose.AssignFruit(0);
-				Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
-				//StartCoroutine (FruitObtained (cat, 0));
+				FruitObtained (cat);
+
 			} else if (fruit == dog.currentFruit) {
-				StartCoroutine (FruitObtained (dog, 1));
+				FruitObtained (dog);
+
 			} else {
 				soundManager.PlayCollectFruit(false);
-				// punish players
+				Debug.Log("Punishing players");
+
+				cat.ChangeCupLevel(false);
+				dog.ChangeCupLevel(false);
 			}
 		}
 	}
