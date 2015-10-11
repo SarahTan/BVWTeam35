@@ -72,10 +72,12 @@ public class FruitChoose : MonoBehaviour
                     {
                         temp = Random.Range(0, maxButtons);
 
-                        while (assignedNum[i] == temp || assignedNum[(i + 1) % 2] == temp)
+                        while (assignedNum[0] == temp || assignedNum[1] == temp)
                         {
                             temp = Random.Range(0, maxButtons);
+                            
                         }
+                        Debug.Log("i:" + i + " num :" + assignedNum[i]);
                         assignedNum[i] = temp;
                     }
 
@@ -87,6 +89,7 @@ public class FruitChoose : MonoBehaviour
                         {
                             prevChoice[i] = currentChoice[i];
                             currentChoice[i] = buttons[assignedNum[i]];
+                            Debug.Log("i:" + i + " num :" + assignedNum[i]);
                         }
                     }
                 }
@@ -102,7 +105,7 @@ public class FruitChoose : MonoBehaviour
                 {
                     temp = Random.Range(0, maxButtons);
 
-                    while (assignedNum[player] == temp || assignedNum[(player + 1) % 2] == temp)
+                    while (assignedNum[0] == temp || assignedNum[1] == temp)
                     {
                         temp = Random.Range(0, maxButtons);
                     }
