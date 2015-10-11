@@ -7,11 +7,12 @@ public class Timer : MonoBehaviour {
 	public GameManager gameManager;
 	public Text timerText;              //text object
 
-	int timeLeft = 200;	// in seconds
+	int duration = 100;	// in seconds
+	int timeLeft;	
 
 	// Use this for initialization
 	void Start () {
-	
+		timeLeft = duration;
 	}
 	
 	// Update is called once per frame
@@ -25,6 +26,9 @@ public class Timer : MonoBehaviour {
 
 	IEnumerator Countdown () {
 		while (timeLeft > 0) {
+			if (timeLeft == duration/2) {
+				gameManager.halfWayMark = true;
+			}
 			timeLeft--;
 			timerText.text = "Time Left: " + timeLeft/60 + ":" + (timeLeft%60).ToString("00");
 			yield return new WaitForSeconds(1f);

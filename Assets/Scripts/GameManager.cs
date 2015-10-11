@@ -4,20 +4,34 @@ using System.Collections;
 public class GameManager : MonoBehaviour {
 
 	public static bool gameInProgress = false;
+	public bool halfWayMark = false;
 
 	public FruitChoose fruitChoose;
 	public Timer timer;
 	public SoundManager soundManager;
 	public Animator[] anim = new Animator[2];
 
+	public GameObject[] badArrows = new GameObject[2];
+	public GameObject badFruitsParent;
+
 	public Player cat;
 	public Player dog;
 
 	int winner = -1;
 	int loser = -1;
+	
+	SpriteRenderer[] badFruits = new SpriteRenderer[12];
+	int badFruit;
+	float badFruitTime = 5f;
+	int saboAnimal;
+
+	Color transparent = new Color (1f, 1f, 1f, 0f);
 
 	// Use this for initialization
 	void Start () {
+		for (int i = 0; i < 12; i++) {
+			badFruits[i] = badFruitsParent.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>();
+		}
 		StartGame ();
 	}
 	
@@ -31,6 +45,8 @@ public class GameManager : MonoBehaviour {
 		timer.StartTimer ();
 		cat.SetCurrentFruit(fruitChoose.AssignFruit (0));
 		dog.SetCurrentFruit(fruitChoose.AssignFruit (1));
+
+		StartCoroutine (GetBadFruit());
 
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
@@ -51,6 +67,13 @@ public class GameManager : MonoBehaviour {
 		player.SetCurrentFruit(fruitChoose.AssignFruit (player.animalNum));
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);		
 	}
+	
+	
+	void ToggleBadArrow (bool on, Color color) {
+		badArrows [saboAnimal].SetActive (on);
+		badFruits [badFruit].color = color;
+	}
+
 
 	IEnumerator ChangeCups (Player player) {
 		yield return new WaitForSeconds (1f);	// change this to right fruit sound duration
@@ -65,10 +88,27 @@ public class GameManager : MonoBehaviour {
 		player.IncreaseScore();
 	}
 
+
 	IEnumerator GetBadFruit () {
+		yield return new WaitForSeconds (Random.Range (15, 25));
 
+		while (gameInProgress) {
+			saboAnimal = Random.Range (0, 2);
+			badFruit = fruitChoose.AssignBadFruit ();
+			Debug.Log("Bad fruit: " + badFruit);
+			ToggleBadArrow (true, Color.white);
+			yield return new WaitForSeconds (badFruitTime);
 
-		yield return new WaitForSeconds(Random.Range(5, 10));
+			// Nobody collected it
+			if (badFruit != -1) {
+				ToggleBadArrow (false, transparent);
+			}
+			if (halfWayMark) {
+				yield return new WaitForSeconds (Random.Range (3, 5));
+			} else {
+				yield return new WaitForSeconds (Random.Range (7, 10));
+			}
+		}
 	}
 
 
@@ -80,10 +120,17 @@ public class GameManager : MonoBehaviour {
 			} else if (fruit == dog.currentFruit) {
 				FruitObtained (dog);
 
+			} else if (fruit == badFruit) {
+				if (saboAnimal == 0) {
+					cat.ChangeCupLevel(false);
+				} else {
+					dog.ChangeCupLevel(false);
+				}
+				ToggleBadArrow(false, transparent);
+				badFruit = -1;
+
 			} else {
 				soundManager.PlayCollectFruit(false);
-				Debug.Log("Punishing players");
-
 				cat.ChangeCupLevel(false);
 				dog.ChangeCupLevel(false);
 			}
