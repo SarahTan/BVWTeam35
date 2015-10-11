@@ -8,8 +8,7 @@ public class FruitChoose : MonoBehaviour
 
 	int[] prevAssignedNum = new int[2];
     int[] assignedNum = new int[2];     // this used to be called first and second
-    int gameStart = 0;
-    int temp,maxButtons = 11;
+    int maxButtons = 11;
  
     // Use this for initialization
     void Awake() {
@@ -32,19 +31,10 @@ public class FruitChoose : MonoBehaviour
        */
 
     public int AssignFruit(int player) {
-        if (gameStart < 2) {                              //assign random fruit two times
-
-            assignedNum[player] = Random.Range(0, maxButtons);
-            while (assignedNum[0] == assignedNum[1]) {
-                assignedNum[player] = Random.Range(0, maxButtons);  //in case two numbers are same
-            }
-            gameStart++;
-		} else {
-            temp = Random.Range(0, maxButtons);
-			while (temp == assignedNum[player] || temp == assignedNum[(player+1)%2]) {
-				temp = Random.Range(0, maxButtons);
-            }
-			assignedNum[player] = temp;
+		prevAssignedNum[player] = assignedNum[player];
+		while (assignedNum[player] == prevAssignedNum[player] ||
+		       assignedNum[player] == assignedNum[(player+1)%2]) {
+			assignedNum[player] = Random.Range(0, maxButtons);
         }
 		return assignedNum[player];
 	}
