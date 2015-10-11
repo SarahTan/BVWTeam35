@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour {
 	public GameManager gameManager;
 	public Text timerText;              //text object
 
-	int timeLeft = 80;	// in seconds
+	int timeLeft = 200;	// in seconds
 
 	// Use this for initialization
 	void Start () {
