@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour {
 
 	int winner = -1;
 	int loser = -1;
-	int assignFruit = -1;
 
 	// Use this for initialization
 	void Start () {
@@ -45,7 +44,7 @@ public class GameManager : MonoBehaviour {
 		player.ChangeCupLevel(true);
 
 		// switch to next cup
-		if (player.cupLevel == player.maxLevel) {	
+		if (player.cupLevel == player.maxCupLevel) {	
 			StartCoroutine(ChangeCups(player));
 		}
 		

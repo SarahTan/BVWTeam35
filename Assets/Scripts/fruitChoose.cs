@@ -8,7 +8,7 @@ public class FruitChoose : MonoBehaviour
 
 	int[] prevAssignedNum = new int[2];
     int[] assignedNum = new int[2];     // this used to be called first and second
-    int maxButtons = 11;
+    int maxButtons = 12;
  
     // Use this for initialization
     void Awake() {
