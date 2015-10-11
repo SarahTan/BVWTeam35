@@ -14,13 +14,15 @@ public class Player : MonoBehaviour {
 	public int cupLevel = 0;
 	public float maxCupLevel = 3;
 	public GameObject cursor;
+	public GameObject wholeFruits;
 
 	public GameObject fruitLevel3;
 	public GameObject fruitLevel4; 
 	public GameObject fruitLevel5;
 
-	ArrayList fruitsList = new ArrayList();
+	ArrayList choppedFruitsList = new ArrayList();
 	ArrayList fadeFruitsThreads = new ArrayList();
+	GameObject[] wholeFruitsList = new GameObject[12];
 	GameObject fruitLevel;
 	float cursorMoveSpeed;
 	float cursorMoveTime = 0.5f;
@@ -29,6 +31,9 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		fruitLevel = fruitLevel3;
+		for (int i = 0; i < 12; i++) {
+			wholeFruitsList[i] = wholeFruits.transform.GetChild(i).gameObject;
+		}
 	}
 	
 	// Update is called once per frame
@@ -67,11 +72,19 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public void SetCurrentFruit (int fruit) {
+		currentFruit = fruit;
+
+		wholeFruitsList [fruit].GetComponent<SpriteRenderer> ().color = Color.white;
+	}
+
 	public void ChangeCupLevel (bool increase) {
 		if (increase) {
+			wholeFruitsList [currentFruit].GetComponent<SpriteRenderer> ().color = transparent;
+
 			// Fade the fruits in
 			GameObject tempFruit = fruitLevel.transform.GetChild (cupLevel).GetChild (currentFruit).gameObject;
-			fruitsList.Add (tempFruit);
+			choppedFruitsList.Add (tempFruit);
 			IEnumerator tempFadeFruit = FadeFruit(tempFruit, transparent, Color.white);
 			StartCoroutine(tempFadeFruit);
 			fadeFruitsThreads.Add (tempFadeFruit);
@@ -87,10 +100,10 @@ public class Player : MonoBehaviour {
 			fadeFruitsThreads.Clear();
 
 			// Fade all fruits away at the same time
-			foreach(GameObject fruit in fruitsList) {
+			foreach(GameObject fruit in choppedFruitsList) {
 				StartCoroutine(FadeFruit(fruit, Color.white, transparent));
 			}
-			fruitsList.Clear();
+			choppedFruitsList.Clear();
 
 			nextPos = emptyPos + cupHeight / maxCupLevel;			
 			cupLevel = 0;

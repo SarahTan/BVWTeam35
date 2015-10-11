@@ -29,8 +29,8 @@ public class GameManager : MonoBehaviour {
 	void StartGame () {
 		gameInProgress = true;
 		timer.StartTimer ();
-		cat.currentFruit = fruitChoose.AssignFruit (0);
-		dog.currentFruit = fruitChoose.AssignFruit (1);
+		cat.SetCurrentFruit(fruitChoose.AssignFruit (0));
+		dog.SetCurrentFruit(fruitChoose.AssignFruit (1));
 
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour {
 			StartCoroutine(ChangeCups(player));
 		}
 		
-		player.currentFruit = fruitChoose.AssignFruit (player.animalNum);
+		player.SetCurrentFruit(fruitChoose.AssignFruit (player.animalNum));
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);		
 	}
 
@@ -63,6 +63,12 @@ public class GameManager : MonoBehaviour {
 		// cupcount increase anim
 		
 		player.IncreaseScore();
+	}
+
+	IEnumerator GetBadFruit () {
+
+
+		yield return new WaitForSeconds(Random.Range(5, 10));
 	}
 
 
