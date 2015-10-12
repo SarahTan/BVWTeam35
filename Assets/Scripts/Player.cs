@@ -8,17 +8,18 @@ public class Player : MonoBehaviour {
 	public static float fullPos = 11.5f;
 	public static float emptyPos = 4f;
 
-	public GameObject speechBubble;
 	public int animalNum;
 	public float nextPos;
+	public GameObject cursor;
 	public int score = 0;
 	public Text scoreText;
 	public int currentFruit = -1;
+	public bool blending = false;
 	public int cupLevel = 0;
-	public float maxCupLevel = 3;
-	public GameObject cursor;
-	public GameObject wholeFruits;
+	public float maxCupLevel = 2;
 
+	public GameObject speechBubble;
+	public GameObject wholeFruits;
 	public GameObject fruitLevel3;
 	public GameObject fruitLevel4; 
 	public GameObject fruitLevel5;
@@ -70,6 +71,7 @@ public class Player : MonoBehaviour {
 	public void SetCurrentFruit (int fruit) {
 		// Ensure speech bubble is visible
 		speechBubble.SetActive(true);
+		blending = false;
 
 		currentFruit = fruit;
 		wholeFruitsList [fruit].GetComponent<SpriteRenderer> ().color = Color.white;
@@ -84,8 +86,6 @@ public class Player : MonoBehaviour {
 			wholeFruitsList [currentFruit].GetComponent<SpriteRenderer> ().color = transparent;
 
 			// Fade the fruits in
-			Debug.Log("Player" + animalNum);
-			Debug.Log("cup level child: " + fruitLevel.transform.GetChild (cupLevel));
 			GameObject tempFruit = fruitLevel.transform.GetChild (cupLevel).GetChild (currentFruit).gameObject;
 			choppedFruitsList.Add (tempFruit);
 			tempFruit.GetComponent<Animator>().SetBool("SetTransparent", false);
@@ -96,6 +96,7 @@ public class Player : MonoBehaviour {
 			// Hide the speech bubble
 			if (cupLevel == maxCupLevel) {
 				speechBubble.SetActive(false);
+				blending = true;
 			}
 
 			StartCoroutine (IncreaseCursor ());
@@ -124,7 +125,6 @@ public class Player : MonoBehaviour {
 			maxCupLevel = 5;
 			fruitLevel = fruitLevel5;
 		}
-		Debug.Log ("Score: " + score);
-		Debug.Log ("maxLevel: " + maxCupLevel);
+		Debug.Log ("player" + animalNum + " score: " + score + ", maxLevel: " + maxCupLevel);
 	}
 }

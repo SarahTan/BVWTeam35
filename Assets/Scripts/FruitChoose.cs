@@ -8,12 +8,16 @@ public class FruitChoose : MonoBehaviour {
 	int badFruit;
     int maxButtons = 12;
  
-    // Use this for initialization
     void Awake() {
   		prevAssignedNum [0] = prevAssignedNum [1] = -1;
         assignedNum[0] = assignedNum[1] = -1;
 		badFruit = -1;
     }
+
+	// Use this for initialization
+	void Start () {
+
+	}
 
     // Update is called once per frame
     void Update() {
@@ -30,11 +34,13 @@ public class FruitChoose : MonoBehaviour {
 
     public int AssignFruit(int player) {
 		prevAssignedNum[player] = assignedNum[player];
-		while (assignedNum[player] == prevAssignedNum[player] ||
-		       assignedNum[player] == assignedNum[(player+1)%2] ||
-		       assignedNum[player] == badFruit) {
+		while (assignedNum[player] == prevAssignedNum[player] ||	// get a different number
+		       assignedNum[player] == assignedNum[(player+1)%2] ||	// number different from other player's
+		       assignedNum[player] == badFruit) {					// its not a bad fruit
 			assignedNum[player] = Random.Range(0, maxButtons);
         }
+		Debug.Log("player0: " + assignedNum[player] + ", player1: " + assignedNum[(player+1)%2]);
+
 		return assignedNum[player];
 	}
 

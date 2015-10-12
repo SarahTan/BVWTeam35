@@ -52,14 +52,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void FruitObtained (Player player) {
-		Debug.Log ("Player" + player + " collected, score: " + player.score);
 		soundManager.PlayCollectFruit (true);
 		soundManager.PlayAnimalSpeak (player.animalNum, SoundManager.SPEECH.RIGHT_FRUIT);
 		anim [player.animalNum].SetTrigger ("Happy");
-
-		Debug.Log ("1");
 		player.ChangeCupLevel(true);
-		Debug.Log ("2");
 
 		// switch to next cup
 		if (player.cupLevel == player.maxCupLevel) {	
@@ -116,10 +112,10 @@ public class GameManager : MonoBehaviour {
 
 	public void ReceiveInput (int fruit) {
 		if (gameInProgress) {
-			if (fruit == cat.currentFruit) {
+			if (fruit == cat.currentFruit && !cat.blending) {
 				FruitObtained (cat);
 
-			} else if (fruit == dog.currentFruit) {
+			} else if (fruit == dog.currentFruit && !dog.blending) {
 				FruitObtained (dog);
 
 			} else if (fruit == badFruit) {
