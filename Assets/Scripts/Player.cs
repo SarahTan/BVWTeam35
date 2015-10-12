@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
 
@@ -7,9 +8,11 @@ public class Player : MonoBehaviour {
 	public static float fullPos = 11.5f;
 	public static float emptyPos = 4f;
 
+	public GameObject speechBubble;
 	public int animalNum;
 	public float nextPos;
 	public int score = 0;
+	public Text scoreText;
 	public int currentFruit = -1;
 	public int cupLevel = 0;
 	public float maxCupLevel = 3;
@@ -30,6 +33,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		scoreText.text = "x0";
 		fruitLevel = fruitLevel3;
 		for (int i = 0; i < 12; i++) {
 			wholeFruitsList[i] = wholeFruits.transform.GetChild(i).gameObject;
@@ -61,51 +65,48 @@ public class Player : MonoBehaviour {
 		// To make sure it goes back to this exact point
 		cursor.transform.localPosition = new Vector3(cursor.transform.localPosition.x, emptyPos);
 	}
-
-	IEnumerator FadeFruit (GameObject fruit, Color startColor, Color targetColor) {
-		SpriteRenderer sprite = fruit.GetComponent<SpriteRenderer> ();
-		sprite.color = startColor;
-
-		while (sprite.color != targetColor) {
-			sprite.color = Color.Lerp (sprite.color, targetColor, 3f*Time.deltaTime);
-			yield return null;
-		}
-	}
+	
 
 	public void SetCurrentFruit (int fruit) {
-		currentFruit = fruit;
+		// Ensure speech bubble is visible
+		speechBubble.SetActive(true);
 
+		currentFruit = fruit;
 		wholeFruitsList [fruit].GetComponent<SpriteRenderer> ().color = Color.white;
 	}
 
 	public void ChangeCupLevel (bool increase) {
+		// Make sure the cursor is at the correct starting height
+		StopAllCoroutines ();
+		cursor.transform.localPosition = new Vector3(cursor.transform.localPosition.x, nextPos);
+
 		if (increase) {
 			wholeFruitsList [currentFruit].GetComponent<SpriteRenderer> ().color = transparent;
 
 			// Fade the fruits in
+			Debug.Log("Player" + animalNum);
+			Debug.Log("cup level child: " + fruitLevel.transform.GetChild (cupLevel));
 			GameObject tempFruit = fruitLevel.transform.GetChild (cupLevel).GetChild (currentFruit).gameObject;
 			choppedFruitsList.Add (tempFruit);
-			IEnumerator tempFadeFruit = FadeFruit(tempFruit, transparent, Color.white);
-			StartCoroutine(tempFadeFruit);
-			fadeFruitsThreads.Add (tempFadeFruit);
+			tempFruit.GetComponent<Animator>().SetBool("SetTransparent", false);
 
 			cupLevel++;
 			nextPos = emptyPos + cupLevel*(cupHeight / maxCupLevel);
+
+			// Hide the speech bubble
+			if (cupLevel == maxCupLevel) {
+				speechBubble.SetActive(false);
+			}
+
 			StartCoroutine (IncreaseCursor ());
 		} else {
-			// Stop all running FadeFruit threads
-			foreach (IEnumerator thread in fadeFruitsThreads) {
-				StopCoroutine(thread);
-			}
-			fadeFruitsThreads.Clear();
-
 			// Fade all fruits away at the same time
 			foreach(GameObject fruit in choppedFruitsList) {
-				StartCoroutine(FadeFruit(fruit, Color.white, transparent));
+				fruit.GetComponent<Animator>().SetBool("SetTransparent", true);
 			}
 			choppedFruitsList.Clear();
 
-			nextPos = emptyPos + cupHeight / maxCupLevel;			
+			nextPos = emptyPos + cupHeight / maxCupLevel;		
 			cupLevel = 0;
 			StartCoroutine(DecreaseCursor());
 		}
@@ -113,6 +114,7 @@ public class Player : MonoBehaviour {
 
 	public void IncreaseScore () {
 		score++;
+		scoreText.text = "x" + score;
 		cupLevel = 0;
 
 		if (score == 3) {

@@ -8,9 +8,8 @@ public class SoundManager : MonoBehaviour {
 
 	public AudioClip correctFruit;
 	public AudioClip wrongFruit;
-	public AudioClip blendFruit;
-	public AudioSource collectFruit;
-
+	public AudioSource collectFruit;	
+	public AudioSource blender;
 
 	public enum SPEECH {RIGHT_FRUIT = 0, CUP_FILLED = 1, WIN = 2, LOSE = 3};
 	public AudioClip[] catSpeech = new AudioClip[4];
@@ -41,8 +40,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public void PlayBlender () {
-		collectFruit.clip = blendFruit;
-		collectFruit.Play ();
+		blender.Play ();
 	}
 
 	public void PlayAnimalSpeak (int animal, SPEECH speech) {

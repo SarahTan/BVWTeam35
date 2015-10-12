@@ -33,6 +33,7 @@ public class Timer : MonoBehaviour {
 			timerText.text = "Time Left: " + timeLeft/60 + ":" + (timeLeft%60).ToString("00");
 			yield return new WaitForSeconds(1f);
 		}
+		Debug.Log ("time: " + timeLeft);
 		gameManager.TimesUp();
 	}
 }

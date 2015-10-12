@@ -17,51 +17,51 @@ public class GetInput : MonoBehaviour {
 	void Update () {
 		if (GameManager.gameInProgress) {
 			if (Input.GetKeyDown ("w")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 0;
 
 			} else if (Input.GetKeyDown ("a")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 1;
 
 			} else if (Input.GetKeyDown ("s")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 2;
 
 			} else if (Input.GetKeyDown ("d")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 3;
 
 			} else if (Input.GetKeyDown ("f")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 4;
 
 			} else if (Input.GetKeyDown ("g")) {
-				Debug.Log (Input.inputString);
+				//Debug.Log (Input.inputString);
 				selected = 5;
 
 			} else if (Input.GetKeyDown ("up")) {
-				Debug.Log ("Up");
+				//Debug.Log ("Up");
 				selected = 6;
 
 			} else if (Input.GetKeyDown ("down")) {
-				Debug.Log ("Down");
+				//Debug.Log ("Down");
 				selected = 7;
 
 			} else if (Input.GetKeyDown ("left")) {
-				Debug.Log ("Left");
+				//Debug.Log ("Left");
 				selected = 8;
 
 			} else if (Input.GetKeyDown ("right")) {
-				Debug.Log ("Right");
+				//Debug.Log ("Right");
 				selected = 9;
 
 			} else if (Input.GetKeyDown ("space")) {
-				Debug.Log ("Space");
+				//Debug.Log ("Space");
 				selected = 10;
 
 			} else if (Input.GetKeyDown ("mouse 1")) {
-				Debug.Log ("Right click");
+				//Debug.Log ("Right click");
 				selected = 11;
 			} 
 		}

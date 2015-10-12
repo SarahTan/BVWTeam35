@@ -52,20 +52,22 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void FruitObtained (Player player) {
-		Debug.Log ("Player" + player + " collected");
+		Debug.Log ("Player" + player + " collected, score: " + player.score);
 		soundManager.PlayCollectFruit (true);
 		soundManager.PlayAnimalSpeak (player.animalNum, SoundManager.SPEECH.RIGHT_FRUIT);
 		anim [player.animalNum].SetTrigger ("Happy");
 
+		Debug.Log ("1");
 		player.ChangeCupLevel(true);
+		Debug.Log ("2");
 
 		// switch to next cup
 		if (player.cupLevel == player.maxCupLevel) {	
-			StartCoroutine(ChangeCups(player));
+			StartCoroutine (ChangeCups (player));
+		} else {		
+			player.SetCurrentFruit (fruitChoose.AssignFruit (player.animalNum));
+			Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);	
 		}
-		
-		player.SetCurrentFruit(fruitChoose.AssignFruit (player.animalNum));
-		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);		
 	}
 	
 	
@@ -76,16 +78,16 @@ public class GameManager : MonoBehaviour {
 
 
 	IEnumerator ChangeCups (Player player) {
-		yield return new WaitForSeconds (1f);	// change this to right fruit sound duration
-		
 		soundManager.PlayBlender();
 		soundManager.PlayAnimalSpeak(player.animalNum, SoundManager.SPEECH.CUP_FILLED);
-		
-		player.ChangeCupLevel (false);
-		
-		// cupcount increase anim
-		
+
+		yield return new WaitForSeconds (1f);	// change this to right fruit sound duration
+
+		player.ChangeCupLevel (false);		
 		player.IncreaseScore();
+		player.SetCurrentFruit (fruitChoose.AssignFruit (player.animalNum));
+
+		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);	
 	}
 
 
@@ -131,8 +133,8 @@ public class GameManager : MonoBehaviour {
 
 			} else {
 				soundManager.PlayCollectFruit(false);
-				cat.ChangeCupLevel(false);
-				dog.ChangeCupLevel(false);
+				//cat.ChangeCupLevel(false);
+				//dog.ChangeCupLevel(false);
 			}
 		}
 	}
@@ -149,6 +151,8 @@ public class GameManager : MonoBehaviour {
 			winner = 1;
 			loser = 0;
 		}
+
+		Debug.Log ("Winner: " + winner);
 
 		soundManager.PlayAnimalSpeak(winner, SoundManager.SPEECH.WIN);
 		anim [winner].SetBool ("Win", true);
