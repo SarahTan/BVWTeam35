@@ -16,9 +16,6 @@ public class GameManager : MonoBehaviour {
 
 	public Player cat;
 	public Player dog;
-
-	int winner = -1;
-	int loser = -1;
 	
 	SpriteRenderer[] badFruits = new SpriteRenderer[12];
 	int badFruit;
@@ -150,24 +147,35 @@ public class GameManager : MonoBehaviour {
 	public void TimesUp () {
 		gameInProgress = false;
 		StopAllCoroutines ();
-		soundManager.PlayEndGame ();
+		StartCoroutine (EndScene ());
+
+	}
+
+	IEnumerator EndScene () {
+		yield return new WaitForSeconds (1f);
 
 		if (cat.score > dog.score) {
-			winner = 0;
-			loser = 1;
+			cat.winner = true;
+			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.WIN);
+		} else if (cat.score > dog.score) {
+			dog.winner = true;
+			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
 		} else {
-			winner = 1;
-			loser = 0;
+			cat.winner = true;
+			dog.winner = true;
+			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.WIN);
+			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
 		}
 
-		Debug.Log ("Winner: " + winner);
+		timer.RemoveTimer ();
+		cat.EndGame ();
+		dog.EndGame ();
+		soundManager.PlayEndGame ();
+		
+		yield return new WaitForSeconds (5f);
+		Application.LoadLevel ("Credit");
 
-		soundManager.PlayAnimalSpeak(winner, SoundManager.SPEECH.WIN);
-		anim [winner].SetBool ("Win", true);
-		// you win text
 
-		soundManager.PlayAnimalSpeak(loser, SoundManager.SPEECH.LOSE);
-		anim [loser].SetBool ("Win", false);
-		// you lose text
+
 	}
 }

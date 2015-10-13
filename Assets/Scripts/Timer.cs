@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour {
 	public GameManager gameManager;
 	public Text timerText;              //text object
 
-	int duration = 100;	// in seconds
+	int duration = 1;	// in seconds
 	int timeLeft;	
 
 	// Use this for initialization
@@ -23,6 +23,18 @@ public class Timer : MonoBehaviour {
 	public void StartTimer () {
 		StartCoroutine ("Countdown");
 	}
+
+	public void RemoveTimer () {
+		timerText.text = "";
+		//StartCoroutine (FadeTimer ());
+	}
+
+//	IEnumerator FadeTimer () {
+//		while (timerText.color != Color.clear) {
+//			timerText.color = Color.Lerp(timerText.color, Color.clear, 2f*Time.deltaTime);
+//			yield return null;
+//		}
+//	}
 
 	IEnumerator Countdown () {
 		while (timeLeft > 0) {

@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
 	public bool blending = false;
 	public int cupLevel = 0;
 	public float maxCupLevel = 2;
+	public bool winner = false;
 
 	public GameObject speechBubble;
 	public GameObject wholeFruits;
@@ -24,6 +25,10 @@ public class Player : MonoBehaviour {
 	public GameObject fruitLevel4; 
 	public GameObject fruitLevel5;
 
+	public GameObject winText;
+	public GameObject loseText;
+
+	Animator anim;
 	ArrayList choppedFruitsList = new ArrayList();
 	ArrayList fadeFruitsThreads = new ArrayList();
 	GameObject[] wholeFruitsList = new GameObject[12];
@@ -66,7 +71,18 @@ public class Player : MonoBehaviour {
 		// To make sure it goes back to this exact point
 		cursor.transform.localPosition = new Vector3(cursor.transform.localPosition.x, emptyPos);
 	}
-	
+
+	public void EndGame () {
+		speechBubble.SetActive (false);
+		wholeFruitsList [currentFruit].GetComponent<SpriteRenderer> ().color = transparent;
+		cursor.SetActive (false);
+
+		if (winner) {
+			winText.SetActive (true);
+		} else {
+			loseText.SetActive(true);
+		}
+	}
 
 	public void SetCurrentFruit (int fruit) {
 		// Ensure speech bubble is visible
