@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour {
 		dog.SetCurrentFruit(fruitChoose.AssignFruit (1));
 
 		StartCoroutine (GetBadFruit());
+		StartCoroutine (AnimalMove ());
 
 		Debug.Log ("Cat: " + cat.currentFruit + ", dog: " + dog.currentFruit);
 	}
@@ -72,6 +73,17 @@ public class GameManager : MonoBehaviour {
 		badFruits [badFruit].color = color;
 	}
 
+	IEnumerator AnimalMove () {
+		while (gameInProgress) {
+			yield return new WaitForSeconds (Random.Range (1f, 2f));
+
+			if (Random.Range (0, 2) == 0) {
+				anim [Random.Range (0, 2)].SetTrigger ("Move");
+			} else {
+				anim [Random.Range (0, 2)].SetTrigger ("Blink");
+			}
+		}
+	}
 
 	IEnumerator ChangeCups (Player player) {
 		soundManager.PlayBlender();
