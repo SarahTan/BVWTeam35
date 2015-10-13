@@ -157,14 +157,20 @@ public class GameManager : MonoBehaviour {
 		if (cat.score > dog.score) {
 			cat.winner = true;
 			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.WIN);
+			anim[0].SetBool("Win", true);
+			anim[1].SetBool("Lose", true);
 		} else if (cat.score > dog.score) {
 			dog.winner = true;
 			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
+			anim[1].SetBool("Win", true);
+			anim[0].SetBool("Lose", true);
 		} else {
 			cat.winner = true;
 			dog.winner = true;
 			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.WIN);
-			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
+			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);			
+			anim[0].SetBool("Win", true);
+			anim[1].SetBool("Win", true);
 		}
 
 		timer.RemoveTimer ();
