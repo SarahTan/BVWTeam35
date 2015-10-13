@@ -64,6 +64,8 @@ public class GetInput : MonoBehaviour {
 				//Debug.Log ("Right click");
 				selected = 11;
 			} 
+		} else if (Input.GetKeyDown ("s")) {			
+			gameManager.ReceiveInput(2);
 		}
 
 		SendInput ();

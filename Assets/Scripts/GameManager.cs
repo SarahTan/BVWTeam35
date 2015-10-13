@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour {
 
 	public FruitChoose fruitChoose;
 	public Timer timer;
-	public SoundManager soundManager;
 	public Animator[] anim = new Animator[2];
 
 	public GameObject[] badArrows = new GameObject[2];
@@ -16,16 +15,22 @@ public class GameManager : MonoBehaviour {
 
 	public Player cat;
 	public Player dog;
+
+	public GameObject creditsButton;
 	
+	SoundManager soundManager;
 	SpriteRenderer[] badFruits = new SpriteRenderer[12];
 	int badFruit;
 	float badFruitTime = 5f;
 	int saboAnimal;
+	bool readyForCredits = false;
 
 	Color transparent = new Color (1f, 1f, 1f, 0f);
 
 	// Use this for initialization
 	void Start () {
+		soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+		soundManager.PlayStartGame ();
 		for (int i = 0; i < 12; i++) {
 			badFruits[i] = badFruitsParent.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>();
 		}
@@ -120,6 +125,7 @@ public class GameManager : MonoBehaviour {
 
 
 	public void ReceiveInput (int fruit) {
+		Debug.Log ("Fruit: " + fruit);
 		if (gameInProgress) {
 			if (fruit == cat.currentFruit && !cat.blending) {
 				FruitObtained (cat);
@@ -129,17 +135,22 @@ public class GameManager : MonoBehaviour {
 
 			} else if (fruit == badFruit) {
 				if (saboAnimal == 0) {
-					cat.ChangeCupLevel(false);
+					cat.ChangeCupLevel (false);
 				} else {
-					dog.ChangeCupLevel(false);
+					dog.ChangeCupLevel (false);
 				}
-				ToggleBadArrow(false, transparent);
+				ToggleBadArrow (false, transparent);
 				badFruit = -1;
 
 			} else {
-				soundManager.PlayCollectFruit(false);
+				soundManager.PlayCollectFruit (false);
 				//cat.ChangeCupLevel(false);
 				//dog.ChangeCupLevel(false);
+			}
+		} else if (readyForCredits) {
+			// banana
+			if (fruit == 2) {
+				Application.LoadLevel ("Credit");
 			}
 		}
 	}
@@ -152,15 +163,18 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator EndScene () {
+		soundManager.PlayEndGame ();
 		yield return new WaitForSeconds (1f);
 
 		if (cat.score > dog.score) {
 			cat.winner = true;
 			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.WIN);
+			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.LOSE);
 			anim[0].SetBool("Win", true);
 			anim[1].SetBool("Lose", true);
-		} else if (cat.score > dog.score) {
+		} else if (cat.score < dog.score) {
 			dog.winner = true;
+			soundManager.PlayAnimalSpeak(0, SoundManager.SPEECH.LOSE);
 			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
 			anim[0].SetBool("Lose", true);
 			anim[1].SetBool("Win", true);
@@ -176,12 +190,12 @@ public class GameManager : MonoBehaviour {
 		timer.RemoveTimer ();
 		cat.EndGame ();
 		dog.EndGame ();
-		soundManager.PlayEndGame ();
 		
-		yield return new WaitForSeconds (5f);
-		Application.LoadLevel ("Credit");
-
-
-
+		yield return new WaitForSeconds (3f);
+		foreach (Transform child in transform) {
+			child.gameObject.SetActive(false);
+		}
+		creditsButton.SetActive (true);
+		readyForCredits = true;
 	}
 }

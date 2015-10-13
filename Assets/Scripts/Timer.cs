@@ -7,7 +7,7 @@ public class Timer : MonoBehaviour {
 	public GameManager gameManager;
 	public Text timerText;              //text object
 
-	int duration = 10;	// in seconds
+	int duration = 100;	// in seconds
 	int timeLeft;	
 
 	// Use this for initialization
@@ -38,12 +38,13 @@ public class Timer : MonoBehaviour {
 
 	IEnumerator Countdown () {
 		while (timeLeft > 0) {
+			yield return new WaitForSeconds(1f);
+
 			if (timeLeft == duration/2) {
 				gameManager.halfWayMark = true;
 			}
 			timeLeft--;
 			timerText.text = "Time Left: " + timeLeft/60 + ":" + (timeLeft%60).ToString("00");
-			yield return new WaitForSeconds(1f);
 		}
 		Debug.Log ("time: " + timeLeft);
 		gameManager.TimesUp();
