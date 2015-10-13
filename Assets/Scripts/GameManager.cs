@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
 		for (int i = 0; i < 12; i++) {
 			badFruits[i] = badFruitsParent.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>();
 		}
-		StartGame ();
+		Invoke ("StartGame", 3f);
 	}
 	
 	// Update is called once per frame
@@ -162,8 +162,8 @@ public class GameManager : MonoBehaviour {
 		} else if (cat.score > dog.score) {
 			dog.winner = true;
 			soundManager.PlayAnimalSpeak(1, SoundManager.SPEECH.WIN);
-			anim[1].SetBool("Win", true);
 			anim[0].SetBool("Lose", true);
+			anim[1].SetBool("Win", true);
 		} else {
 			cat.winner = true;
 			dog.winner = true;

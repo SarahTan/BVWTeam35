@@ -17,7 +17,7 @@ public class SoundManager : MonoBehaviour {
 	public AudioSource animalSpeech;
 	//TODO: 2 SEPARATE SOURCES FOR EACH ANIMAL
 
-	float fadeSpeed = 0.2f;
+	float fadeSpeed = 2f;
 
 	// Use this for initialization
 	void Start () {
