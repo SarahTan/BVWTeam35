@@ -25,7 +25,8 @@ public class StartScene : MonoBehaviour {
             Application.LoadLevel(1);
         }*/
         if ((gameEnable == true) && Input.GetKeyDown(KeyCode.S)) {
-            Application.LoadLevel("IntroScene");
+            nextMove = false;
+            Application.LoadLevel("Instructions");
         }
     }
 
