@@ -6,33 +6,31 @@ public class IntroScene : MonoBehaviour {
     public AudioSource IntroMusic;
     public RawImage Introduction2;
     bool NextScene = false;
+    bool GotoNext = false;
 
 	// Use this for initialization
 	void Start () {
+        Invoke("FinishFirst", 1.5f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        SceneControll();
-    }
-
-    void SceneControll() {
-        
-        if (Input.GetKeyUp(KeyCode.S)) {
-            StartScene.nextMove = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.S) && StartScene.nextMove == true && NextScene == false)
+        if (Input.GetKeyDown(KeyCode.S) && NextScene == true)
         {
-            StartScene.nextMove = false;
-            NextScene = true;
             Introduction2.gameObject.SetActive(true);
-
+            Invoke("FinishSecond", 1.5f);
         }
-        if (Input.GetKeyDown(KeyCode.S) && StartScene.nextMove == true && NextScene == true)
+        if (Input.GetKeyDown(KeyCode.S) && GotoNext == true)
         {
             Application.LoadLevel("Main");
         }
+    }
+
+    void FinishFirst() {
+        NextScene = true;
+    }
+    void FinishSecond() {
+        GotoNext = true;
     }
 
 

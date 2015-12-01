@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour {
 
 
 	IEnumerator GetBadFruit () {
-		yield return new WaitForSeconds (Random.Range (15, 25));
+		yield return new WaitForSeconds (Random.Range (8, 15));
 
 		while (gameInProgress) {
 			saboAnimal = Random.Range (0, 2);
