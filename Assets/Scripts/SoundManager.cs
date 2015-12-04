@@ -2,33 +2,35 @@
 using System.Collections;
 
 public class SoundManager : MonoBehaviour {
-
-	public AudioClip[] bgmClips = new AudioClip[3];
-	public AudioSource bgm;
-
-	public AudioClip correctFruit;
-	public AudioClip wrongFruit;
-	public AudioSource collectFruit;	
-	public AudioSource blender;
-
+	
+	protected SoundManager () {}
+	
 	public enum SPEECH {RIGHT_FRUIT = 0, CUP_FILLED = 1, WIN = 2, LOSE = 3};
-	public AudioClip[] catSpeeches = new AudioClip[4];
-	public AudioClip[] dogSpeeches = new AudioClip[4];
+	
+	public AudioSource bgm;
+	public AudioSource correctFruit;
+	public AudioSource wrongFruit;
+	public AudioSource blender;
 	public AudioSource catSpeech;
 	public AudioSource dogSpeech;
-	//TODO: 2 SEPARATE SOURCES FOR EACH ANIMAL
+	
+	AudioClip[] bgmClips = new AudioClip[3];
+	AudioClip[] catSpeeches = new AudioClip[4];
+	AudioClip[] dogSpeeches = new AudioClip[4];
 
 	float fadeSpeed = 2f;
-
-	void Awake () {
-		DontDestroyOnLoad (gameObject);
-
-	}
+	float musicIncrease1 = 11f;
+	float musicIncrease2 = 54f;
+	float musicVol0 = 0.15f;
+	float musicVol1 = 0.3f;
+	float musicVol2 = 0.7f;
+	
 
 	// Use this for initialization
 	void Start () {
-		StartCoroutine (FadeBGM (0));
 		Cursor.visible = false;
+		DontDestroyOnLoad (gameObject);
+		InitGame ();
 	}
 	
 	// Update is called once per frame
@@ -36,13 +38,25 @@ public class SoundManager : MonoBehaviour {
 	
 	}
 
+	void InitGame () {
+		bgmClips = Resources.LoadAll<AudioClip> ("Audio/BGM");
+		catSpeeches = Resources.LoadAll<AudioClip> ("Audio/cat");
+		dogSpeeches = Resources.LoadAll<AudioClip> ("Audio/dog");
+	}
+
+	// Called by StartScene
+	public void ResetGame () {
+		wrongFruit.volume = musicVol0;
+		correctFruit.volume = 0.5f;
+		StartCoroutine (FadeBGM (0));
+	}
+
 	public void PlayCollectFruit (bool correct) {
 		if (correct) {
-			collectFruit.clip = correctFruit;
+			correctFruit.Play();
 		} else {
-			collectFruit.clip = wrongFruit;
+			wrongFruit.Play();
 		}
-		collectFruit.Play ();
 	}
 
 	public void PlayBlender () {
@@ -62,12 +76,25 @@ public class SoundManager : MonoBehaviour {
 		}
 	}
 
+	// Called by GM
 	public void PlayEndGame () {
 		StartCoroutine (FadeBGM (2));
 	}
 
+	// Called by GM
 	public void PlayStartGame () {
 		StartCoroutine (FadeBGM (1));
+
+		StartCoroutine (ChangeSoundVol (wrongFruit, musicIncrease1, musicVol1));
+		StartCoroutine (ChangeSoundVol (correctFruit, musicIncrease1, 0.8f));
+
+		StartCoroutine (ChangeSoundVol (wrongFruit, musicIncrease2, musicVol2));
+		StartCoroutine (ChangeSoundVol (correctFruit, musicIncrease1, 1f));
+	}
+
+	IEnumerator ChangeSoundVol (AudioSource source, float time, float vol) {
+		yield return new WaitForSeconds (time);
+		source.volume = vol;
 	}
 
 	IEnumerator FadeBGM (int clip) {

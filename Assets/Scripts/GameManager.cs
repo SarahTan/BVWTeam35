@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 	public Player dog;
 
 	public GameObject creditsButton;
-	
+
 	SoundManager soundManager;
 	SpriteRenderer[] badFruits = new SpriteRenderer[12];
 	int badFruit;
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		soundManager = GameObject.Find ("SoundManager").GetComponent<SoundManager>();
+		soundManager = GameObject.Find ("SoundManager(Clone)").GetComponent<SoundManager>();
 		soundManager.PlayStartGame ();
 		for (int i = 0; i < 12; i++) {
 			badFruits[i] = badFruitsParent.transform.GetChild(i).gameObject.GetComponent<SpriteRenderer>();
@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour {
 
 
 	IEnumerator GetBadFruit () {
-		yield return new WaitForSeconds (Random.Range (15, 25));
+		yield return new WaitForSeconds (Random.Range (8, 15));
 
 		while (gameInProgress) {
 			saboAnimal = Random.Range (0, 2);
@@ -163,8 +163,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	IEnumerator EndScene () {
-		soundManager.PlayEndGame ();
 		yield return new WaitForSeconds (1f);
+		soundManager.PlayEndGame ();
 
 		if (cat.score > dog.score) {
 			cat.winner = true;

@@ -3,37 +3,53 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class IntroScene : MonoBehaviour {
-    public AudioSource IntroMusic;
-    public RawImage Introduction2;
-    bool NextScene = false;
+    
+	public AudioSource instructionMusic;
+	public GameObject instructions1;
+	public GameObject instructions2;
+	public GameObject continueButton;
+	public GameObject startButton;
+
+	bool firstButton = false;
+	bool secondButton = false;
 
 	// Use this for initialization
 	void Start () {
-
+		instructions1.SetActive (true);
+		instructions2.SetActive (false);
+		continueButton.SetActive (false);
+		startButton.SetActive (false);
+        Invoke("FirstButtonAppear", 3f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        SceneControl();
+		// Skip button
+		if (Input.GetKeyDown(KeyCode.Return)){
+			Application.LoadLevel("Main");
+		}
+
+
+		if (Input.GetKeyUp (KeyCode.S)) {
+			if (secondButton) {
+				Application.LoadLevel("Main");
+			} else if (firstButton) {
+				instructions1.SetActive (false);
+				continueButton.SetActive (false);
+				instructions2.gameObject.SetActive(true);
+				Invoke ("SecondButtonAppear", 3f);
+			}
+		}
     }
 
-    void SceneControl() {
-        
-        if (Input.GetKeyUp(KeyCode.S)) {
-            StartScene.nextMove = true;
-        }
+    void FirstButtonAppear() {
+		continueButton.SetActive (true);
+        firstButton = true;
+    }
 
-        if (Input.GetKeyDown(KeyCode.S) && StartScene.nextMove == true && NextScene == false)
-        {
-            StartScene.nextMove = false;
-            NextScene = true;
-            Introduction2.gameObject.SetActive(true);
-
-        }
-        if (Input.GetKeyDown(KeyCode.S) && StartScene.nextMove == true && NextScene == true)
-        {
-            Application.LoadLevel("Main");
-        }
+    void SecondButtonAppear() {		
+		startButton.SetActive (true);
+        secondButton = true;
     }
 
 

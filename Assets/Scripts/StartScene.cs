@@ -4,35 +4,35 @@ using UnityEngine.UI;
 
 public class StartScene : MonoBehaviour {
 
-    public RawImage StartButton;
-    public static bool nextMove = true;
-    bool gameEnable = false;
+    public GameObject startButton;
+
+	bool readyToStart = false;
+	SoundManager soundManager;
+
 	// Use this for initialization
 	void Start () {
+		SMCreator temp = SMCreator.Instance;	// Create SM for the first time
+		soundManager = GameObject.Find ("SoundManager(Clone)").GetComponent<SoundManager> ();
+		soundManager.ResetGame ();
+		startButton.SetActive (false);
         Invoke("buttonAppear", 3);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        /*
-        if (Input.GetKeyDown(KeyCode.S)){
-            nextMove = false;
-            Application.LoadLevel(1);
+		// Skip button
+        if (Input.GetKeyDown(KeyCode.Return)){
+            Application.LoadLevel("Main");
         }
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            nextMove = true;
-            Application.LoadLevel(1);
-        }*/
-        if ((gameEnable == true) && Input.GetKeyDown(KeyCode.S)) {
-            nextMove = false;
+
+        if (Input.GetKeyUp(KeyCode.S) && readyToStart) {
             Application.LoadLevel("Instructions");
         }
     }
 
     void buttonAppear() {
-        StartButton.gameObject.SetActive(true);
-        gameEnable = true;
+		readyToStart = true;
+        startButton.SetActive(true);
     }
 
 }

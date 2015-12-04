@@ -1,10 +1,16 @@
 fileFormatVersion: 2
 guid: 5d1c933ae02349649adc6a8016e8bce3
-timeCreated: 1444340160
+timeCreated: 1449197949
 licenseType: Pro
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - bgm: {fileID: 8262102, guid: 2da482c388e0efb43a82093c3864e49e, type: 2}
+  - correctFruit: {fileID: 8274558, guid: 55484ea7f0fe9dc478ad96e7ed6945e7, type: 2}
+  - wrongFruit: {fileID: 8230822, guid: a8c96d6d2ae84a348a58bd6dbfeebd59, type: 2}
+  - blender: {fileID: 8276562, guid: 73dd08d91055d3e4fa70393fd2eba252, type: 2}
+  - catSpeech: {fileID: 8271908, guid: d2770fbe482600749bf42190b16f716d, type: 2}
+  - dogSpeech: {fileID: 8258968, guid: a73be61aacdc6c5479afd514bfd746e8, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -30,7 +30,6 @@ public class Player : MonoBehaviour {
 
 	Animator anim;
 	ArrayList choppedFruitsList = new ArrayList();
-	ArrayList fadeFruitsThreads = new ArrayList();
 	GameObject[] wholeFruitsList = new GameObject[12];
 	GameObject fruitLevel;
 	float cursorMoveSpeed;
